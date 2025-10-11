@@ -5,6 +5,7 @@ namespace Azuriom\Plugin\ApiExtender\Controllers\Admin;
 use Azuriom\Models\Server;
 use Azuriom\Http\Controllers\Controller;
 use Azuriom\Plugin\ApiExtender\Models\ApiKey;
+use Azuriom\Plugin\ApiExtender\Models\ApiExtenderSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -110,5 +111,53 @@ class AdminController extends Controller
             'totalPages' => $totalPages,
             'totalImages' => count($requests)
         ]);
+    }
+
+    public function cron()
+    {
+        return view('apiextender::admin.cron');
+    }
+
+    public function toggleCron(Request $request)
+    {
+        $enabled = $request->boolean('cron_enabled');
+        
+        // Update the cron enabled setting
+        ApiExtenderSetting::setValue('cron_enabled', $enabled, 'boolean');
+        
+        $message = $enabled 
+            ? trans('apiextender::admin.cron.enabled_success') 
+            : trans('apiextender::admin.cron.disabled_success');
+            
+        return redirect()->route('apiextender.admin.cron')
+            ->with('success', $message);
+    }
+
+    public function testCron(Request $request)
+    {
+        if (!ApiExtenderSetting::getValue('cron_enabled', false)) {
+            return redirect()->route('apiextender.admin.cron')
+                ->with('error', trans('apiextender::admin.cron.disabled_error'));
+        }
+
+        try {
+            // Execute Laravel scheduler
+            \Illuminate\Support\Facades\Artisan::call('schedule:run');
+            
+            $output = \Illuminate\Support\Facades\Artisan::output();
+            
+            // Update last execution time and increment counter
+            ApiExtenderSetting::setValue('last_cron_execution', now(), 'datetime');
+            $currentCount = ApiExtenderSetting::getValue('cron_execution_count', 0);
+            ApiExtenderSetting::setValue('cron_execution_count', $currentCount + 1, 'integer');
+            
+            return redirect()->route('apiextender.admin.cron')
+                ->with('success', trans('apiextender::admin.cron.test_success'))
+                ->with('cron_output', $output);
+                
+        } catch (\Exception $e) {
+            return redirect()->route('apiextender.admin.cron')
+                ->with('error', trans('apiextender::admin.cron.test_error') . ': ' . $e->getMessage());
+        }
     }
 }

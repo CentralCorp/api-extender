@@ -24,7 +24,7 @@ class ApiExtenderServiceProvider extends BasePluginServiceProvider
      * The plugin's route middleware.
      */
     protected array $routeMiddleware = [
-        // 'example' => \Azuriom\Plugin\ApiExtender\Middleware\ExampleRouteMiddleware::class,
+        'api.key' => \Azuriom\Plugin\ApiExtender\Middleware\VerifyApiKey::class,
     ];
 
     /**
@@ -41,7 +41,7 @@ class ApiExtenderServiceProvider extends BasePluginServiceProvider
      */
     public function register(): void
     {
-        // $this->registerMiddleware();
+        $this->registerMiddleware();
 
         //
     }
@@ -67,6 +67,7 @@ class ApiExtenderServiceProvider extends BasePluginServiceProvider
 
         Permission::registerPermissions([
             'apiextender.keys' => 'apiextender::admin.permissions.keys',
+            'apiextender.cron' => 'apiextender::admin.permissions.cron',
         ]);
     }
 
@@ -95,6 +96,9 @@ class ApiExtenderServiceProvider extends BasePluginServiceProvider
             ],                    
             'apiextender.admin.api-keys.index' => [
                 'name' => trans('apiextender::admin.keys'),
+            ],
+            'apiextender.admin.cron' => [
+                'name' => trans('apiextender::admin.cron.title'),
             ],
         ];
 

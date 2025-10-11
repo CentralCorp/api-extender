@@ -2,6 +2,7 @@
 
 use Azuriom\Plugin\ApiExtender\Controllers\Api\ApiController;
 use Azuriom\Plugin\ApiExtender\Controllers\Api\ApiImagesController;
+use Azuriom\Plugin\ApiExtender\Controllers\Api\ApiCronController;
 use Illuminate\Support\Facades\Route;
 use Azuriom\Plugin\ApiExtender\Controllers\Api\ApiShopController;
 use Azuriom\Extensions\Plugin\PluginManager;
@@ -32,3 +33,8 @@ if (app(PluginManager::class)->isEnabled('shop')) {
 if (app(PluginManager::class)->isEnabled('skin-api')) {
     Route::get('/images/{type}/{rendertype}/{player}', [ApiImagesController::class, 'images']);
 }
+
+Route::middleware('api.key')->group(function () {
+    Route::match(['get', 'post'], '/cron/execute', [ApiCronController::class, 'executeCron']);
+    Route::get('/cron/status', [ApiCronController::class, 'status']);
+});

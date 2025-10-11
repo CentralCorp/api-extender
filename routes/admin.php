@@ -25,3 +25,9 @@ Route::middleware('can:apiextender.keys')->group(function () {
         Route::delete('/{apiKey}', [AdminController::class, 'deleteApiKey'])->name('delete');
     });
 });
+
+Route::middleware('can:apiextender.cron')->group(function () {
+    Route::get('/cron', [AdminController::class, 'cron'])->name('cron');
+    Route::post('/cron/toggle', [AdminController::class, 'toggleCron'])->name('cron.toggle');
+    Route::post('/cron/test', [AdminController::class, 'testCron'])->name('cron.test');
+});

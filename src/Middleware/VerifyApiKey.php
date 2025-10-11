@@ -10,10 +10,10 @@ class VerifyApiKey
 {
     public function handle(Request $request, Closure $next)
     {
-        $apiKey = $request->header('API-Key');
+        $apiKey = $request->header('API-Key') ?? $request->query('pssw');
 
         if (!$apiKey) {
-            return response()->json(['error' => 'API key missing'], 401);
+            return response()->json(['error' => 'API key missing. Provide via API-Key header or pssw parameter'], 401);
         }
 
         $validKey = ApiKey::where('api_key', $apiKey)->where('is_active', true)->exists();
