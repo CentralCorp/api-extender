@@ -39,7 +39,7 @@ return [
         'endpoints' => 'Available Endpoints',
         'execute_endpoint' => 'Execute all scheduled tasks',
         'status_endpoint' => 'Get cron status information',
-        'api_key_required' => 'API key required in header: API-Key or in ?pssw=your_key',
+        'api_key_required' => 'API key required in header',
         'execution_info' => 'Execution Information',
         'last_execution' => 'Last execution',
         'execution_count' => 'Total executions',

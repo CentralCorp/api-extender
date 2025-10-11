@@ -123,8 +123,8 @@
                         <i class="bi bi-info-circle me-2"></i>
                         <div>
                             <strong>API Key Options:</strong><br>
-                            <small>• Header: <code>API-Key: YOUR_KEY</code><br>
-                            • URL Parameter: <code>?pssw=YOUR_KEY</code></small>
+                            <small>• Header: <code>API-Key: YOUR_KEY</code> OR <br>
+                                      •  php-auth-user: <code>cron</code> and php-auth-pw: <code>YOUR_KEY</code></small>
                         </div>
                     </div>
                     
@@ -207,14 +207,6 @@
                         <pre class="mb-0"><code class="text-light">curl -X POST {{ url('/api/apiextender/cron/execute') }} \
   -H "API-Key: YOUR_API_KEY_HERE" \
   -H "Content-Type: application/json"</code></pre>
-                    </div>
-                    
-                    <h6 class="text-warning mb-3">
-                        <i class="bi bi-link me-1"></i>
-                        Method 2: URL Parameter
-                    </h6>
-                    <div class="code-block bg-dark text-light p-3 rounded">
-                        <pre class="mb-0"><code class="text-light">curl {{ url('/api/apiextender/cron/execute?pssw=YOUR_API_KEY_HERE') }}</code></pre>
                     </div>
                 </div>
                 

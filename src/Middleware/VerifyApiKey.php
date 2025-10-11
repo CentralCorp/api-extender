@@ -10,10 +10,21 @@ class VerifyApiKey
 {
     public function handle(Request $request, Closure $next)
     {
-        $apiKey = $request->header('API-Key') ?? $request->query('pssw');
+        $apiKey = $request->header('API-Key');
 
         if (!$apiKey) {
-            return response()->json(['error' => 'API key missing. Provide via API-Key header or pssw parameter'], 401);
+            $authUser = $request->getUser();
+            $authPassword = $request->getPassword();
+
+            if ($authUser === 'cron' && $authPassword) {
+                $apiKey = $authPassword;
+            }
+        }
+
+        if (!$apiKey) {
+            return response()->json([
+                'error' => 'API key missing. Provide via API-Key header or HTTP Basic Auth (user: cron, password: api-key)'
+            ], 401);
         }
 
         $validKey = ApiKey::where('api_key', $apiKey)->where('is_active', true)->exists();

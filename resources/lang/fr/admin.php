@@ -44,7 +44,7 @@ return [
         'endpoints' => 'Points de terminaison disponibles',
         'execute_endpoint' => 'Exécuter toutes les tâches programmées',
         'status_endpoint' => 'Obtenir les informations de statut du cron',
-        'api_key_required' => 'Clé API requise dans l\'en-tête : API-Key ou dans ?pssw=your_key',
+        'api_key_required' => 'Clé API requise dans l\'en-tête',
         'execution_info' => 'Informations d\'exécution',
         'last_execution' => 'Dernière exécution',
         'execution_count' => 'Nombre d\'exécutions',
