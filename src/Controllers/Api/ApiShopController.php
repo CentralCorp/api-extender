@@ -7,6 +7,8 @@ use Azuriom\Plugin\ApiExtender\Middleware\VerifyApiKey;
 use Illuminate\Http\Request;
 use Azuriom\Plugin\Shop\Models\Category;
 use Azuriom\Plugin\Shop\Models\Payment;
+use Azuriom\Plugin\Shop\Models\Giftcard;
+use Illuminate\Support\Facades\Validator;
 
 class ApiShopController extends Controller
 {
@@ -62,6 +64,51 @@ class ApiShopController extends Controller
         return response()->json([
             'categories' => $categories,
         ]);
+    }
+
+    public function giftcard(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'balance' => ['required', 'numeric', 'min:0.01'],
+            'code' => ['nullable', 'string', 'max:255', 'unique:shop_giftcards,code'],
+            'start_at' => ['nullable', 'date'],
+            'expire_at' => ['nullable', 'date', 'after:start_at'],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $code = $request->input('code') ?? Giftcard::randomCode();
+        $balance = (float) $request->input('balance');
+        $startAt = $request->input('start_at', now());
+        $expireAt = $request->input('expire_at');
+
+        $giftcard = Giftcard::create([
+            'code' => $code,
+            'balance' => $balance,
+            'original_balance' => $balance,
+            'start_at' => $startAt,
+            'expire_at' => $expireAt,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Giftcard created successfully',
+            'giftcard' => [
+                'id' => $giftcard->id,
+                'code' => $giftcard->code,
+                'balance' => $giftcard->balance,
+                'original_balance' => $giftcard->original_balance,
+                'start_at' => $giftcard->start_at,
+                'expire_at' => $giftcard->expire_at,
+                'shareable_link' => $giftcard->shareableLink(),
+                'created_at' => $giftcard->created_at,
+            ],
+        ], 201);
     }
 }
 

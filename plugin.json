@@ -2,7 +2,7 @@
     "id": "apiextender",
     "name": "Api-Extender",
     "description": "Allows extending the functionality of Azuriom's APIs.",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "url": "https:\/\/azuriom.com",
     "authors": [
         "vexat0"

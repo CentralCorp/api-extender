@@ -28,6 +28,8 @@ Route::get('/social', [ApiController::class, 'social']);
 if (app(PluginManager::class)->isEnabled('shop')) {
     Route::get('/shop/payments', [ApiShopController::class, 'payments']);
     Route::get('/shop/categories', [ApiShopController::class, 'categories']);
+
+    Route::post('/shop/giftcard', [ApiShopController::class, 'giftcard']);
 }
 
 if (app(PluginManager::class)->isEnabled('skin-api')) {
